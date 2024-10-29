@@ -74,7 +74,7 @@ export function AppSidebar() {
           >
             <div className="flex items-center w-full px-[20px] gap-4 justify-start">
               <Image
-                src="/Logout.svg"
+                src="/logout.svg"
                 alt="Logout"
                 width={18}
                 height={18}
