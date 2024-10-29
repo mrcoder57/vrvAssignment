@@ -3,6 +3,7 @@ import Image from 'next/image'
 import React from 'react'
 import LanguageSwitcher from './switch-languages/languageToggle'
 import User from './user/user'
+import Notification from './notification/notification'
 
 const Navbar = () => {
   return (
@@ -26,7 +27,7 @@ const Navbar = () => {
 
   {/* Right section with notification, language switcher, and user icon */}
   <div className="flex items-center lg:gap-6 gap-x-1">
-    <Image src="/notification-bell.svg" alt="notification bell" width={24} height={25} />
+    <Notification/>
     <LanguageSwitcher />
     <User />
   </div>
