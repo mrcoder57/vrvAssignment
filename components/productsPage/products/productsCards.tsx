@@ -5,7 +5,7 @@ import { nunitoSans } from '@/app/fonts/font'
 import { Button } from '@/components/ui/button'
 const ProductCards = () => {
   return (
-    <div className=' flex flex-col w-[340px]  h-[497px] bg-white rounded-lg'>
+    <div className=' flex flex-col lg:w-[340px] w-[300px]  h-[497px] bg-white rounded-lg'>
       <div className=' flex items-center justify-center mt-0 pt-0 h-[318px] w-full relative'>
         <Image src="/apple-watch.png" alt="product" fill className=" rounded-lg object-contain" />
       </div>

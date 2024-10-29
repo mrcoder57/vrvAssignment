@@ -40,12 +40,12 @@ function LanguageSwitcher() {
   const [selectedLanguage, setSelectedLanguage] = useState("en");
 
   return (
-    <div className="w-[122px]">
+    <div className="lg:w-[122px] w-auto">
       <Select
         value={selectedLanguage}
         onValueChange={(value) => setSelectedLanguage(value)}
       >
-        <SelectTrigger className="w-[126px] h-[30px] border  flex justify-between  outline-none border-black">
+        <SelectTrigger className="lg:w-[126px] w-auto h-[30px] border  flex justify-between  outline-none border-black">
           <SelectValue>
             <div className="flex items-center gap-2">
               <Image
@@ -55,7 +55,7 @@ function LanguageSwitcher() {
                 height={30}
                 className="rounded"
               />
-              <span className={`${nunitoSans.className} font-semibold text-[#646464]`}>
+              <span className={`${nunitoSans.className} lg:block hidden font-semibold text-[#646464]`}>
                 {languages.find(lang => lang.code === selectedLanguage)?.name}
               </span>
             </div>

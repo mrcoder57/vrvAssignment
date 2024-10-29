@@ -13,8 +13,8 @@ export default function Home() {
       </div>
 
       {/* Chart section */}
-      <div className="flex w-full justify-center">
-        <div className="w-full  px-6"> {/* Adds padding and centers content */}
+      <div className="flex w-full h-full bg-[#F5F6FA] justify-center">
+        <div className="w-full h-full bg-[#F5F6FA] lg:px-6 px-3"> {/* Adds padding and centers content */}
           <Chart />
         </div>
       </div>

@@ -14,7 +14,7 @@ const Navbar = () => {
     </button>
     
     {/* Search bar */}
-    <div className="flex items-center px-4 gap-2 w-[330px] h-[38px] rounded-full bg-[#D5D5D5]">
+    <div className="lg:flex md:flex hidden items-center px-4 gap-2 w-[330px] h-[38px] rounded-full bg-[#D5D5D5]">
       <Image src="/search.svg" alt="search icon" width={15} height={15} />
       <input
         type="text"
@@ -25,7 +25,7 @@ const Navbar = () => {
   </div>
 
   {/* Right section with notification, language switcher, and user icon */}
-  <div className="flex items-center gap-6">
+  <div className="flex items-center lg:gap-6 gap-x-1">
     <Image src="/notification-bell.svg" alt="notification bell" width={24} height={25} />
     <LanguageSwitcher />
     <User />

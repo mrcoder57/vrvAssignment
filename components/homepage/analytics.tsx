@@ -6,11 +6,11 @@ import { nunitoSans } from "@/app/fonts/font";
 const Analytics = () => {
   return (
     <div className=" flex flex-col w-full  ">
-        <div className=" py-7 flex items-center px-6 ">
+        <div className=" py-7 flex items-center lg:px-6 px-3 ">
             <h1 className={`${nunitoSans.className} text-[28px] font-bold text-center `}>Dashboard</h1>
         </div>
    
-    <div className=" w-full flex flex-row justify-between px-6  items-center">
+    <div className=" w-full flex lg:flex-row flex-wrap gap-y-3 justify-between lg:px-6 px-3  items-center">
         
       <Analyticcards
         image="/users.png"
