@@ -37,7 +37,7 @@ const OrderStatus = () => {
         <Image src={"/dropdown.svg"} width={20} height={24} alt="arrow-down" />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="lg:w-[420px] w-[320px] py-1 bg-white rounded-lg shadow-md flex flex-col gap-y-1">
+      <DropdownMenuContent className="lg:w-[420px] w-[320px] lg:h-[250px] h-auto py-1 bg-white rounded-lg shadow-md flex flex-col gap-y-1">
         <DropdownMenuLabel
           className={`${nunitoSans.className} text-[14px] font-semibold`}
         >
