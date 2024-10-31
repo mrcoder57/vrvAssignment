@@ -34,7 +34,7 @@ export default function RootLayout({
       <AppSidebar />
       
       <main className=" w-full h-screen">
-<SidebarTrigger />
+
         <Navbar />
         {children}
       </main>
