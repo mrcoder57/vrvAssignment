@@ -4,14 +4,14 @@ import React from 'react'
 import LanguageSwitcher from './switch-languages/languageToggle'
 import User from './user/user'
 import Notification from './notification/notification'
-
+import {  SidebarTrigger } from "@/components/ui/sidebar";
 const Navbar = () => {
   return (
     <div className=" w-full h-[70px] px-6 bg-white flex justify-between items-center z-50">
   {/* Left section with menu button and search bar */}
   <div className="flex items-center gap-4">
     <button>
-      <Image src="/menu.svg" alt="menu icon" width={24} height={25} />
+      <SidebarTrigger/>
     </button>
     
     {/* Search bar */}
