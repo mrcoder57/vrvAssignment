@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
+import Image from 'next/image'
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   Tooltip,
@@ -279,7 +280,7 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <PanelLeft />
+      <Image src="/menu.svg" alt= "menu icon" width={24} height={25} />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
