@@ -13,10 +13,12 @@ import { dashboardNavs } from "../icons/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Separator } from "../ui/separator";
 
 export function AppSidebar() {
   const pathname = usePathname(); // Get current path
-
+  const isTeams = pathname === "/teams";
+  const isSettings = pathname === "/settings";
   return (
     <Sidebar className="bg-white">
       <SidebarHeader className="h-[70px] flex items-center justify-center">
@@ -46,9 +48,7 @@ export function AppSidebar() {
                     } shadow-none ${nunitoSans.className}`}
                   >
                     <div className="flex items-center w-full px-[20px] gap-4 justify-start">
-                      <navItem.Icon
-                        stroke={isActive ? "#ffffff" : "#000000"}
-                      />
+                      <navItem.Icon stroke={isActive ? "#ffffff" : "#000000"} />
                       <span className="text-left">{navItem.name}</span>
                     </div>
                   </Button>
@@ -57,18 +57,72 @@ export function AppSidebar() {
             })}
           </div>
         </SidebarGroup>
+        <Separator />
+        <SidebarGroup className="">
+          <div className="flex flex-col w-full">
+            <Link href={"/teams"} key={"Teams"} passHref>
+              <Button
+                className={`text-[14px] w-full h-[50px] flex items-center font-semibold ${
+                  isTeams
+                    ? "bg-[#4880ff] hover:bg-[#4880ff] text-white"
+                    : "bg-white hover:bg-gray-100 text-black"
+                } shadow-none ${nunitoSans.className}`}
+              >
+                <div className="flex items-center w-full px-[20px] gap-4 justify-start">
+                  {isTeams ? (
+                    <Image
+                      src="/avatar-outline-white.svg"
+                      alt="team"
+                      width={18}
+                      height={18}
+                    />
+                  ) : (
+                    <Image
+                      src="/avatar-outline.svg"
+                      alt="team"
+                      width={18}
+                      height={18}
+                    />
+                  )}
+                  <span className="text-left">Teams</span>
+                </div>
+              </Button>
+            </Link>
+          </div>
+        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter>
         <div className="flex flex-col w-full">
-          <Button
-            className={`text-[14px] w-full h-[50px] flex items-center font-semibold shadow-none bg-white hover:bg-gray-100 text-black ${nunitoSans.className}`}
-          >
+          <Link href={"/settings"} key={"Settings"} passHref>
+        <Button
+                className={`text-[14px] w-full h-[50px] flex items-center font-semibold ${
+                  isSettings
+                    ? "bg-[#4880ff] hover:bg-[#4880ff] text-white"
+                    : "bg-white hover:bg-gray-100 text-black"
+                } shadow-none ${nunitoSans.className}`}
+              >
             <div className="flex items-center w-full px-[20px] gap-4 justify-start">
-              <Image src="/setting.svg" alt="Setting" width={26} height={26} />
+              {isSettings ? (
+                <Image
+                  src="/settings-white.svg"
+                  alt="Setting"
+                  width={18}
+                  height={18}
+                />
+              ) : (
+                <Image
+                  src="/setting.svg"
+                  alt="Setting"
+                  width={26}
+                  height={26}
+                />
+              )}
+            
               <span>Setting</span>
             </div>
           </Button>
+          </Link>
           <Button
             className={`text-[14px] w-full h-[50px] flex items-center font-semibold shadow-none bg-white hover:bg-gray-100 text-black ${nunitoSans.className}`}
           >
