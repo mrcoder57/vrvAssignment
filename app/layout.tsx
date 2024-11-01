@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar/appsidebar";
 import Navbar from "@/components/navbar/navbar";
 
@@ -28,19 +28,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <body >
-    <SidebarProvider>
-   
-      <AppSidebar />
-      
-      <main className=" w-full h-screen">
+      <body>
+        <SidebarProvider>
+          <AppSidebar />
 
-        <Navbar />
-        {children}
-      </main>
-     
-    </SidebarProvider>
-    </body>
+          <main className=" w-full h-screen">
+            <Navbar />
+            {children}
+          </main>
+        </SidebarProvider>
+      </body>
     </html>
   );
 }
