@@ -1,10 +1,80 @@
+"use client"
 import React from "react";
 import Image from "next/image";
 import { nunitoSans } from "@/app/fonts/font";
 
+
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
+import { useToast } from "@/hooks/use-toast";
+const formSchema = z.object({
+  username: z.string().min(3, {
+    message: "Username must be at least 3 characters.",
+  }),
+  email: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters.",
+  }),
+  role: z.enum(["Admin", "Analyst", "Inventory Manager"]),
+  permissions: z.object({
+    delete: z.boolean().optional(),
+    edit: z.boolean().optional(),
+  }),
+})
+
+type FormValues = z.infer<typeof formSchema>
+
 const AddMember = () => {
+  const [isAdmin, setIsAdmin] = useState(false)
+ 
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      role: "Analyst",
+      permissions: {
+        delete: false,
+        edit: false,
+      },
+    },
+  })
+
+  function onSubmit(values: FormValues) {
+    console.log(values)
+    // Here you would typically 
+    toast.success("User created successfully!")
+    
+  }
   return (
-    <div className="relative rounded-md w-full bg-white flex flex-col items-center justify-center h-auto py-14 lg:px-[180px] md:px-10 px-9">
+    <div className=" rounded-md w-full bg-white flex flex-col items-center justify-center h-auto py-14 lg:px-[180px] md:px-10 px-9">
       <div className="flex items-center justify-center flex-col gap-y-2">
         <label className="flex items-center justify-center h-[80px] w-[80px] rounded-full bg-[#ECECEE] text-white cursor-pointer">
           <input
@@ -26,96 +96,127 @@ const AddMember = () => {
         </p>
       </div>
 
-      <div className="lg:grid md:grid md:grid-cols-2 lg:justify-between flex flex-wrap items-center justify-center mx-auto gap-x-[60px] gap-y-10 mt-8 w-full ">
-        {/* form section */}
-        <div className="flex flex-col w-full items-center md:items-start">
-          <label
-            className={`${nunitoSans.className} text-[14px] text-[#606060] mb-1 text-left`}
-          >
-            First Name
-          </label>
-          <input
-            type="text"
-            placeholder="First Name"
-            className={`${nunitoSans.className} text-[14px] h-12 border border-gray-300 rounded-[4px] p-2 lg:w-72 w-64 bg-[#F5F6FA] placeholder-[#606060] outline-none focus:ring-0`}
+      <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-4xl w-full mx-auto  p-6 bg-white rounded-lg shadow-md">
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input placeholder="johndoe" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input type="email" placeholder="john@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input type="password" placeholder="********" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Role</FormLabel>
+              <Select 
+                onValueChange={(value) => {
+                  field.onChange(value)
+                  setIsAdmin(value === "Admin")
+                }}
+                defaultValue={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a role" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="Admin">Admin</SelectItem>
+                  <SelectItem value="Analyst">Analyst</SelectItem>
+                  <SelectItem value="Inventory Manager">Inventory Manager</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="space-y-3">
+          <FormLabel>Permissions</FormLabel>
+          <FormField
+            control={form.control}
+            name="permissions.delete"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    disabled={isAdmin}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>
+                    Delete
+                  </FormLabel>
+                  <FormDescription>
+                    Can delete items
+                  </FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="permissions.edit"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    disabled={isAdmin}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>
+                    Edit
+                  </FormLabel>
+                  <FormDescription>
+                    Can edit items
+                  </FormDescription>
+                </div>
+              </FormItem>
+            )}
           />
         </div>
-
-        <div className="flex flex-col w-full items-center md:items-start">
-          <label
-            className={`${nunitoSans.className} text-[14px] text-[#606060] mb-1`}
-          >
-            Last Name
-          </label>
-          <input
-            type="text"
-            placeholder="Last Name"
-            className={`${nunitoSans.className} text-[14px] h-12 border border-gray-300 rounded-[4px] p-2 lg:w-72 w-64 bg-[#F5F6FA] placeholder-[#606060] outline-none focus:ring-0`}
-          />
-        </div>
-
-        <div className="flex flex-col w-full items-center md:items-start">
-          <label
-            className={`${nunitoSans.className} text-[14px] text-[#606060] mb-1`}
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            placeholder="Email"
-            className={`${nunitoSans.className} text-[14px] h-12 border border-gray-300 rounded-[4px] p-2 lg:w-72 w-64 bg-[#F5F6FA] placeholder-[#606060] outline-none focus:ring-0`}
-          />
-        </div>
-
-        <div className="flex flex-col w-full items-center md:items-start">
-          <label
-            className={`${nunitoSans.className} text-[14px] text-[#606060] mb-1`}
-          >
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            placeholder="Phone Number"
-            className={`${nunitoSans.className} text-[14px] h-12 border border-gray-300 rounded-[4px] p-2 lg:w-72 w-64 bg-[#F5F6FA] placeholder-[#606060] outline-none focus:ring-0`}
-          />
-        </div>
-
-        <div className="flex flex-col w-full items-center md:items-start">
-          <label
-            className={`${nunitoSans.className} text-[14px] text-[#606060] mb-1`}
-          >
-            Position
-          </label>
-          <input
-            type="text"
-            placeholder="Position"
-            className={`${nunitoSans.className} text-[14px] h-12 border border-gray-300 rounded-[4px] p-2 lg:w-72 w-64 bg-[#F5F6FA] placeholder-[#606060] outline-none focus:ring-0`}
-          />
-        </div>
-
-        <div className="flex flex-col w-full items-center md:items-start">
-          <label
-            className={`${nunitoSans.className} text-[14px] text-[#606060] mb-1`}
-          >
-            Gender
-          </label>
-          <select
-            className={`${nunitoSans.className} text-[14px] h-12 border border-gray-300 rounded-[4px] p-2 lg:w-72 w-64 bg-[#F5F6FA] text-[#606060] outline-none focus:ring-0`}
-          >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Button outside the form div */}
-      <button className="mt-[60px] h-11 w-52 px-6 py-2 rounded-md bg-[#4379EE]  text-white font-semibold">
-        <span className={`${nunitoSans.className} text-center text-[14px]`}>
-          Add Member
-        </span>
-      </button>
+        <Button type="submit" className="w-full bg-[#4880FF] hover:bg-[#4880FF] text-white">Create User</Button>
+      </form>
+    </Form>
     </div>
   );
 };

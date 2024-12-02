@@ -18,6 +18,7 @@ import { Separator } from "../ui/separator";
 export function AppSidebar() {
   const pathname = usePathname(); // Get current path
   const isTeams = pathname === "/teams";
+  const isYourTeams = pathname === "/yourTeams";
   const isSettings = pathname === "/settings";
   return (
     <Sidebar className="bg-white">
@@ -85,6 +86,36 @@ export function AppSidebar() {
                     />
                   )}
                   <span className="text-left">Teams</span>
+                </div>
+              </Button>
+            </Link>
+          </div>
+          <div className="flex flex-col w-full">
+            <Link href={"/yourTeams"} key={"Teams"} passHref>
+              <Button
+                className={`text-[14px] w-full h-[50px] flex items-center font-semibold ${
+                  isYourTeams
+                    ? "bg-[#4880ff] hover:bg-[#4880ff] text-white"
+                    : "bg-white hover:bg-gray-100 text-black"
+                } shadow-none ${nunitoSans.className}`}
+              >
+                <div className="flex items-center w-full px-[20px] gap-4 justify-start">
+                  {isYourTeams ? (
+                    <Image
+                      src="/avatar-outline-white.svg"
+                      alt="team"
+                      width={18}
+                      height={18}
+                    />
+                  ) : (
+                    <Image
+                      src="/avatar-outline.svg"
+                      alt="team"
+                      width={18}
+                      height={18}
+                    />
+                  )}
+                  <span className="text-left">Users Controls</span>
                 </div>
               </Button>
             </Link>
