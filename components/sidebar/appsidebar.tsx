@@ -20,6 +20,9 @@ export function AppSidebar() {
   const isTeams = pathname === "/teams";
   const isYourTeams = pathname === "/yourTeams";
   const isSettings = pathname === "/settings";
+  const isLogin = pathname === "/login";
+  if (isLogin) {
+    return null}
   return (
     <Sidebar className="bg-white">
       <SidebarHeader className="h-[70px] flex items-center justify-center">
