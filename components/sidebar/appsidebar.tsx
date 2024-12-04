@@ -14,15 +14,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Separator } from "../ui/separator";
+import useAuthStore from "@/zustand/store"; // Import the store
 
 export function AppSidebar() {
   const pathname = usePathname(); // Get current path
+  const { user, logout } = useAuthStore(); // Get user and logout function from the store
+
   const isTeams = pathname === "/teams";
   const isYourTeams = pathname === "/yourTeams";
   const isSettings = pathname === "/settings";
-  const isLogin = pathname === "/login";
+  const isLogin = pathname === "/";
+
   if (isLogin) {
-    return null}
+    return null;
+  }
+
+  const handleLogout = () => {
+    logout(); // Call the logout function from the store
+  };
+
   return (
     <Sidebar className="bg-white">
       <SidebarHeader className="h-[70px] flex items-center justify-center">
@@ -39,7 +49,6 @@ export function AppSidebar() {
         <SidebarGroup className="mt-[20px]">
           <div className="flex flex-col w-full">
             {dashboardNavs.map((navItem) => {
-              // Check if nav item link matches the current path
               const isActive = pathname === navItem.link;
 
               return (
@@ -62,7 +71,7 @@ export function AppSidebar() {
           </div>
         </SidebarGroup>
         <Separator />
-        <SidebarGroup className="">
+        <SidebarGroup>
           <div className="flex flex-col w-full">
             <Link href={"/teams"} key={"Teams"} passHref>
               <Button
@@ -94,7 +103,7 @@ export function AppSidebar() {
             </Link>
           </div>
           <div className="flex flex-col w-full">
-            <Link href={"/yourTeams"} key={"Teams"} passHref>
+            <Link href={"/yourTeams"} key={"YourTeams"} passHref>
               <Button
                 className={`text-[14px] w-full h-[50px] flex items-center font-semibold ${
                   isYourTeams
@@ -129,36 +138,37 @@ export function AppSidebar() {
       <SidebarFooter>
         <div className="flex flex-col w-full">
           <Link href={"/settings"} key={"Settings"} passHref>
-        <Button
-                className={`text-[14px] w-full h-[50px] flex items-center font-semibold ${
-                  isSettings
-                    ? "bg-[#4880ff] hover:bg-[#4880ff] text-white"
-                    : "bg-white hover:bg-gray-100 text-black"
-                } shadow-none ${nunitoSans.className}`}
-              >
-            <div className="flex items-center w-full px-[20px] gap-4 justify-start">
-              {isSettings ? (
-                <Image
-                  src="/settings-white.svg"
-                  alt="Setting"
-                  width={18}
-                  height={18}
-                />
-              ) : (
-                <Image
-                  src="/setting.svg"
-                  alt="Setting"
-                  width={26}
-                  height={26}
-                />
-              )}
-            
-              <span>Setting</span>
-            </div>
-          </Button>
+            <Button
+              className={`text-[14px] w-full h-[50px] flex items-center font-semibold ${
+                isSettings
+                  ? "bg-[#4880ff] hover:bg-[#4880ff] text-white"
+                  : "bg-white hover:bg-gray-100 text-black"
+              } shadow-none ${nunitoSans.className}`}
+            >
+              <div className="flex items-center w-full px-[20px] gap-4 justify-start">
+                {isSettings ? (
+                  <Image
+                    src="/settings-white.svg"
+                    alt="Setting"
+                    width={18}
+                    height={18}
+                  />
+                ) : (
+                  <Image
+                    src="/setting.svg"
+                    alt="Setting"
+                    width={26}
+                    height={26}
+                  />
+                )}
+
+                <span>Setting</span>
+              </div>
+            </Button>
           </Link>
           <Button
             className={`text-[14px] w-full h-[50px] flex items-center font-semibold shadow-none bg-white hover:bg-gray-100 text-black ${nunitoSans.className}`}
+            onClick={handleLogout} // Attach logout functionality
           >
             <div className="flex items-center w-full px-[20px] gap-4 justify-start">
               <Image
