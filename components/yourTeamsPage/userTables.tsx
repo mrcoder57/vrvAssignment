@@ -63,11 +63,14 @@ const UsersTable = ({ searchQuery }: UsersTableProps) => {
   const handleEdit = (userId: string) => {
     if (!user) {
       toast.error("You must be logged in to perform this action.");
+      window.alert("You must be logged in to perform this action.");
+      window.location.href = "/";
       return;
     }
 
     if (!user.permissions.edit) {
       toast.error("You do not have permission to edit users.");
+      window.alert("You do not have permission to edit users.");
       return;
     }
 
@@ -77,11 +80,14 @@ const UsersTable = ({ searchQuery }: UsersTableProps) => {
   const handleDelete = (userId: string) => {
     if (!user) {
       toast.error("You must be logged in to perform this action.");
+      window.alert("You must be logged in to perform this action.");
+      window.location.href = "/";
       return;
     }
 
     if (!user.permissions.delete) {
       toast.error("You do not have permission to delete users.");
+      window.alert("You do not have permission to delete users.");
       return;
     }
 
