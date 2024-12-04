@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import useAuthStore from '@/zustand/store';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +17,14 @@ export default function LoginForm() {
   const [error, setError] = useState('');
   const login = useAuthStore((state: { login: (user: any) => void }) => state.login);
   const { user } = useAuthStore();
+  const router = useRouter();
+
+  // Check if the user is already logged in and redirect to the dashboard
+  useEffect(() => {
+    if (user) {
+      router.push('/dashboard');
+    }
+  }, [user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,11 +44,9 @@ export default function LoginForm() {
       }
   
       login(data.user); // Store user data in Zustand
-      console.log("zustand user after login:", user); // Correct way to check updated state
-  
       toast.success("Login Successful");
-      // Optionally redirect
-      window.location.href = '/dashboard';
+      // Optionally redirect after successful login
+      router.push('/dashboard');
     } catch (err) {
       setError('Failed to connect to the server.');
     }
