@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 
 interface Permission {
   delete: boolean;
@@ -22,20 +22,32 @@ interface AuthStore {
   logout: () => void;
 }
 
-const useAuthStore = create<AuthStore>((set:any) => ({
-  user: null,
-  login: (user:User) =>
-    set(() => ({
-      user: {
-        ...user,
-        permissions: {
-          delete: user.role === 'admin',
-          view: true, // All users have view permission
-          edit: user.role === 'admin' || user.role === 'analyst',
-        },
-      },
-    })),
-  logout: () => set(() => ({ user: null })),
+const useAuthStore = create<AuthStore>((set) => ({
+  user: null, // Default to null before checking localStorage
+  login: (user: User) => {
+    // Set the user in the store and localStorage
+    set({ user });
+    if (typeof window !== "undefined") {
+      // Store the user object in localStorage
+      localStorage.setItem('user', JSON.stringify(user));
+    }
+  },
+  logout: () => {
+    // Clear the user from the store and localStorage
+    set({ user: null });
+    if (typeof window !== "undefined") {
+      localStorage.removeItem('user');
+    }
+  },
 }));
 
+// Retrieve user from localStorage when the component mounts
+if (typeof window !== "undefined") {
+  const storedUser = localStorage.getItem('user');
+  if (storedUser) {
+    useAuthStore.setState({ user: JSON.parse(storedUser) });
+  }
+}
+
 export default useAuthStore;
+
