@@ -97,7 +97,7 @@ export function AppSidebar() {
                       height={18}
                     />
                   )}
-                  <span className="text-left">Teams</span>
+                  <span className="text-left">Add to Teams</span>
                 </div>
               </Button>
             </Link>
