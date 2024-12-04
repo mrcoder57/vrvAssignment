@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import {
   Table,
@@ -25,13 +23,14 @@ interface UsersTableProps {
 
 const UsersTable = ({ searchQuery }: UsersTableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
+  const [users, setUsers] = useState(mockUserData); // Use state to track users
   const itemsPerPage = 9;
 
   // Access filters and search query from Zustand store
   const { filters, setFilters } = useFilterStore(); // You can use filters and setFilters here
 
   // Filter users based on the search query and selected filters
-  const filteredUsers = mockUserData.filter(
+  const filteredUsers = users.filter(
     (user) =>
       // Check if the user matches search query (in name or email)
       (user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -89,6 +88,20 @@ const UsersTable = ({ searchQuery }: UsersTableProps) => {
       toast.error("You do not have permission to delete users.");
       window.alert("You do not have permission to delete users.");
       return;
+    }
+
+    const userIndex = users.findIndex((user) => user.id === userId);
+
+    if (userIndex !== -1) {
+      // Splice to remove the user from the array
+      const updatedUsers = [...users];
+      updatedUsers.splice(userIndex, 1);
+      setUsers(updatedUsers); // Update the state with the new user list
+
+      toast.success("User deleted successfully");
+      window.alert("User deleted successfully");
+    } else {
+      toast.error("User not found");
     }
 
     console.log("Deleting user:", userId);
