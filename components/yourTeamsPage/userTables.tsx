@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import {
   Table,
@@ -13,95 +14,91 @@ import { mockUserData } from "@/utils/constant";
 import Image from "next/image";
 import { Separator } from "../ui/separator";
 import Badge from "./badges/badge";
+import { UserEditDialog } from "./editUserModal/editUserModal";
+import useAuthStore from "@/zustand/store";
+import { toast } from "sonner";
 
 interface UsersTableProps {
   searchQuery: string;
 }
 
-const UsersTable = ({ searchQuery}:UsersTableProps) => {
+const UsersTable = ({ searchQuery }: UsersTableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 9;
+
+  // Access the user from the auth store
+  const { user } = useAuthStore();
+
+  // Filter users based on the search query
   const filteredUsers = mockUserData.filter(
     (user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  const startIndex = currentPage * itemsPerPage;
-  const currentData = mockUserData.slice(startIndex, startIndex + itemsPerPage);
 
+  const startIndex = currentPage * itemsPerPage;
+  const currentData = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
+
+  // Pagination Handlers
   const handlePrevious = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
+    if (currentPage > 0) setCurrentPage(currentPage - 1);
   };
+
   const handleNext = () => {
-    if ((currentPage + 1) * itemsPerPage < mockUserData.length) {
+    if ((currentPage + 1) * itemsPerPage < filteredUsers.length)
       setCurrentPage(currentPage + 1);
-    }
   };
-  const getStatusStyles = (status: string) => {
-    switch (status) {
-      case "Rejected":
-        return "bg-[#EF382680] text-[#EF3826]"; // 50% opacity for background, solid color for text
-      case "Pending":
-        return "bg-[#6226EF80] text-[#6226EF]";
-      case "Paid":
-        return "bg-[#00B69B80] text-[#00B69B]";
-      case "Overdue":
-        return "bg-[#FFA75680] text-[#FFA756]";
-      default:
-        return "";
+
+  // Handle Edit Action
+  const handleEdit = (userId: string) => {
+    if (!user) {
+      toast.error("You must be logged in to perform this action.");
+      return;
     }
+    if (!user.permissions.edit) {
+      toast.error("You do not have permission to edit users.");
+      return;
+    }
+
+    // Open edit dialog
+    console.log("Editing user:", userId);
   };
 
   return (
     <div className="relative rounded-lg w-full">
-      <Table className=" bg-white rounded-lg w-full">
-        {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+      <Table className="bg-white rounded-lg w-full">
         <TableHeader>
-          <TableRow className="h-[49px] ">
-            <TableHead
-              className={`${nunitoSans.className} text-[14px] text-black font-semibold flex items-center px-8`}
-            >
+          <TableRow className="h-[49px]">
+            <TableHead className="px-8 text-[14px] text-black font-semibold">
               Image
             </TableHead>
-            <TableHead
-              className={`${nunitoSans.className} text-[14px] text-black font-semibold`}
-            >
+            <TableHead className="text-[14px] text-black font-semibold">
               Full Name
             </TableHead>
-            <TableHead
-              className={`${nunitoSans.className} text-[14px] text-black font-semibold`}
-            >
+            <TableHead className="text-[14px] text-black font-semibold">
               Email
             </TableHead>
-            <TableHead
-              className={`${nunitoSans.className} text-[14px] text-black font-semibold`}
-            >
+            <TableHead className="text-[14px] text-black font-semibold">
               Role
             </TableHead>
-            <TableHead
-              className={`${nunitoSans.className} text-[14px] text-black font-semibold`}
-            >
+            <TableHead className="text-[14px] text-black font-semibold">
               Permissions
             </TableHead>
-            <TableHead
-              className={`${nunitoSans.className} text-[14px] text-black font-semibold`}
-            >
+            <TableHead className="text-[14px] text-black font-semibold">
               Actions
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {currentData.map((row, index) => (
-            <TableRow key={index} className=" h-24">
+          {currentData.map((row) => (
+            <TableRow key={row.id} className="h-24">
               <TableCell className="font-medium px-8">
                 <Image
-                  src={"/batman.svg"}
+                  src="/batman.svg"
                   alt="product"
                   width={60}
                   height={60}
-                  className=" rounded-full"
+                  className="rounded-full"
                 />
               </TableCell>
               <TableCell>{row.name}</TableCell>
@@ -109,35 +106,45 @@ const UsersTable = ({ searchQuery}:UsersTableProps) => {
               <TableCell>{row.role}</TableCell>
               <TableCell>
                 <div className="flex flex-wrap gap-2">
-                  {row.permissions.map((permission: string, index: number) => (
+                  {row.permissions.map((permission, index) => (
                     <Badge key={index} content={permission} />
-                     
-                    
                   ))}
                 </div>
               </TableCell>
               <TableCell>
-                <div className=" flex  h-8 w-20 rounded-md justify-between px-[9px] border border-[#979797] bg-[#FAFBFD]">
-                  <button>
-                    <Image
-                      src={"/edit.svg"}
-                      alt="product"
-                      width={20}
-                      height={20}
-                      className=" rounded-md"
-                    />
-                  </button>
+                <div className="flex h-8 w-28 rounded-md justify-between px-[9px] border border-[#979797] bg-[#FAFBFD]">
+                  {/* Edit Button */}
+                  {user && user.permissions.edit ? (
+                    <UserEditDialog initialData={row} />
+                  ) : (
+                    <button onClick={() => handleEdit(row.id)}>
+                      <Image
+                        src="/edit.svg"
+                        alt="Edit"
+                        width={20}
+                        height={20}
+                        className="rounded-md"
+                      />
+                    </button>
+                  )}
+
                   <Separator
                     orientation="vertical"
-                    className=" h-full bg-[#979797] w-[1px]"
+                    className="h-full bg-[#979797] w-[1px]"
                   />
-                  <button>
+
+                  {/* Delete Button */}
+                  <button
+                    onClick={() =>
+                      toast.error("Delete functionality not implemented yet.")
+                    }
+                  >
                     <Image
-                      src={"/delete.svg"}
-                      alt="product"
+                      src="/delete.svg"
+                      alt="Delete"
                       width={20}
                       height={20}
-                      className=" rounded-md"
+                      className="rounded-md"
                     />
                   </button>
                 </div>
@@ -158,10 +165,10 @@ const UsersTable = ({ searchQuery}:UsersTableProps) => {
         </button>
         <button
           onClick={handleNext}
-          disabled={(currentPage + 1) * itemsPerPage >= mockUserData.length}
+          disabled={(currentPage + 1) * itemsPerPage >= filteredUsers.length}
           className="px-4 py-2 bg-gray-200 text-black rounded-md disabled:opacity-50"
         >
-          <Image src="/right.svg" alt="Previous" width={20} height={20} />
+          <Image src="/right.svg" alt="Next" width={20} height={20} />
         </button>
       </div>
     </div>
@@ -169,3 +176,4 @@ const UsersTable = ({ searchQuery}:UsersTableProps) => {
 };
 
 export default UsersTable;
+``
