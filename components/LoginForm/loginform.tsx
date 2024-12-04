@@ -15,29 +15,31 @@ export default function LoginForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const login = useAuthStore((state: { login: (user: any) => void }) => state.login);
+  const { user } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
-
+  
       const data = await response.json();
-
+  
       if (!response.ok) {
         setError(data.message || 'An error occurred');
         return;
       }
-
+  
       login(data.user); // Store user data in Zustand
-      console.log(data.user);
-      // Redirect to the dashboard
-      window.location.href = '/';
-     toast.success("Login Successful")
+      console.log("zustand user after login:", user); // Correct way to check updated state
+  
+      toast.success("Login Successful");
+      // Optionally redirect
+      window.location.href = '/dashboard';
     } catch (err) {
       setError('Failed to connect to the server.');
     }
