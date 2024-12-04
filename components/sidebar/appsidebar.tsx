@@ -127,7 +127,7 @@ export function AppSidebar() {
                       height={18}
                     />
                   )}
-                  <span className="text-left">Users Controls</span>
+                  <span className="text-left">Users Dashboard</span>
                 </div>
               </Button>
             </Link>

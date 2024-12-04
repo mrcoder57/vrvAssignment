@@ -121,8 +121,8 @@ export const SettingsIcon = ({ stroke = "#000000" }) => (
 // Navigation items array with icons
 export const dashboardNavs = [
   { name: "Dashboard", Icon: DashboardIcon,link:"/dashboard" },
-  { name: "Products", Icon: ProductsIcon,link:"/products" },
-  { name: "Favorites", Icon: FavoritesIcon,link:"/favorites" },
+  // { name: "Products", Icon: ProductsIcon,link:"/products" },
+  // { name: "Favorites", Icon: FavoritesIcon,link:"/favorites" },
   { name: "Order List", Icon: OrderListIcon,link:"/orders" },
-  { name: "Product Stocks", Icon: ProductStocksIcon,link:"/stocks" },
+  // { name: "Product Stocks", Icon: ProductStocksIcon,link:"/stocks" },
 ];
