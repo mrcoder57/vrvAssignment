@@ -24,7 +24,7 @@ const Users = () => {
         </h1>
       </div>
 
-      <div className="flex flex-row justify-between items-center w-full h-full bg-[#F5F6FA] gap-6 lg:px-6 px-3 pb-6">
+      <div className="flex lg:flex-row flex-col-reverse lg:justify-between lg:items-center items-start justify-start w-full h-full bg-[#F5F6FA] gap-6 lg:px-6 px-3 pb-6">
         {/* Pass required filter state */}
         <Filters  />
         {/* Pass search handler */}
