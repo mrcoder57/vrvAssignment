@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -9,14 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { nunitoSans } from "@/app/fonts/font";
 import { mockUserData } from "@/utils/constant";
 import Image from "next/image";
 import { Separator } from "../ui/separator";
 import Badge from "./badges/badge";
 import { UserEditDialog } from "./editUserModal/editUserModal";
 import useAuthStore from "@/zustand/store";
+import useFilterStore from "@/zustand/filterStore"; // Import the filter store
 import { toast } from "sonner";
+import DeleteUserDialog from "./deleteUserdialog";
 
 interface UsersTableProps {
   searchQuery: string;
@@ -26,14 +27,22 @@ const UsersTable = ({ searchQuery }: UsersTableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 9;
 
-  // Access the user from the auth store
-  const { user } = useAuthStore();
+  // Access filters and search query from Zustand store
+  const { filters, setFilters } = useFilterStore(); // You can use filters and setFilters here
 
-  // Filter users based on the search query
+  // Filter users based on the search query and selected filters
   const filteredUsers = mockUserData.filter(
     (user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase())
+      // Check if the user matches search query (in name or email)
+      (user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase())) &&
+      // Filter by selected filters (e.g., roles or permissions)
+      (filters.length === 0 ||
+        filters.some((filter) =>
+          user.permissions.some((permission) =>
+            permission.toLowerCase().includes(filter.toLowerCase())
+          )
+        ))
   );
 
   const startIndex = currentPage * itemsPerPage;
@@ -50,18 +59,33 @@ const UsersTable = ({ searchQuery }: UsersTableProps) => {
   };
 
   // Handle Edit Action
+  const { user } = useAuthStore();
   const handleEdit = (userId: string) => {
     if (!user) {
       toast.error("You must be logged in to perform this action.");
       return;
     }
+
     if (!user.permissions.edit) {
       toast.error("You do not have permission to edit users.");
       return;
     }
 
-    // Open edit dialog
     console.log("Editing user:", userId);
+  };
+
+  const handleDelete = (userId: string) => {
+    if (!user) {
+      toast.error("You must be logged in to perform this action.");
+      return;
+    }
+
+    if (!user.permissions.delete) {
+      toast.error("You do not have permission to delete users.");
+      return;
+    }
+
+    console.log("Deleting user:", userId);
   };
 
   return (
@@ -134,19 +158,23 @@ const UsersTable = ({ searchQuery }: UsersTableProps) => {
                   />
 
                   {/* Delete Button */}
-                  <button
-                    onClick={() =>
-                      toast.error("Delete functionality not implemented yet.")
-                    }
-                  >
-                    <Image
-                      src="/delete.svg"
-                      alt="Delete"
-                      width={20}
-                      height={20}
-                      className="rounded-md"
+                  {user && user.permissions.delete ? (
+                    <DeleteUserDialog
+                      userId={row.id}
+                      userName={row.name}
+                      onConfirm={handleDelete}
                     />
-                  </button>
+                  ) : (
+                    <button onClick={() => handleDelete(row.id)}>
+                      <Image
+                        src="/delete.svg"
+                        alt="Delete"
+                        width={20}
+                        height={20}
+                        className="rounded-md"
+                      />
+                    </button>
+                  )}
                 </div>
               </TableCell>
             </TableRow>
@@ -176,4 +204,3 @@ const UsersTable = ({ searchQuery }: UsersTableProps) => {
 };
 
 export default UsersTable;
-``
