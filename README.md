@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# User Management System
 
-## Getting Started
+## Project Overview
 
-First, run the development server:
+This project is a **User Management System** designed to handle user creation, editing permissions, searching, and filtering based on roles and permissions. It supports authentication via login (JWT tokens) and allows users to perform actions according to their assigned roles and permissions.
+
+---
+
+## Features
+
+### 1. **Create Users**
+   - Admin users can create new users by providing details such as name, email, role, and permissions.
+   - Roles include **Admin**, **User**, and **Moderator**, each with different levels of access.
+
+### 2. **Edit Permissions**
+   - Admins can edit the permissions of existing users, giving them control over what actions the users can perform within the application.
+
+### 3. **Filters & Search**
+   - The system supports dynamic filters based on roles, permissions, or search queries like name and email.
+   - Admins can quickly find users based on different criteria (e.g., role, email, name).
+
+### 4. **Roles with Defined Permissions**
+   - Users are categorized by roles such as **Admin**, **User**, and **Moderator**.
+   - Each role comes with specific permissions (e.g., admin can manage users, user can only view content).
+
+### 5. **Login System (API)**  
+   - The application includes a login API (`/api/login/route.ts`) that authenticates users based on predefined credentials.
+   - Upon login, users receive a JWT token and their permissions are assigned based on their roles.
+
+---
+
+## Project Setup Instructions
+
+### Prerequisites:
+- **Node.js** (version 16 or higher)
+- **npm** or  (package manager)
+
+
+### Step 1: Clone the repository
+Clone the project to your local machine:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+git clone https://github.com/yourusername/project-name.git
